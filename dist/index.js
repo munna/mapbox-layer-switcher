@@ -23,12 +23,35 @@ class MapboxLayerSwitcherControl {
             layerElement.dataset.type = layer.type;
             layerElement.addEventListener("click", event => {
                 const srcElement = event.srcElement;
+                const { layers } = map.getStyle();
                 if (layerElement.dataset.type === 'base') {
                     this.layers.forEach(item => {
-                        map.setLayoutProperty(item.id, 'visibility', 'none');
+                        if (item.id == 'composite') {
+                            if (layers !== undefined) {
+                                layers.forEach(element => {
+                                    if (element.source == 'composite') {
+                                        map.setLayoutProperty(element.id, 'visibility', 'none');
+                                    }
+                                });
+                            }
+                        }
+                        else {
+                            map.setLayoutProperty(item.id, 'visibility', 'none');
+                        }
                     });
                 }
-                map.setLayoutProperty(srcElement.dataset.id, 'visibility', 'visible');
+                if (srcElement.dataset.id == 'composite') {
+                    if (layers !== undefined) {
+                        layers.forEach(element => {
+                            if (element.source == 'composite') {
+                                map.setLayoutProperty(element.id, 'visibility', 'visible');
+                            }
+                        });
+                    }
+                }
+                else {
+                    map.setLayoutProperty(srcElement.dataset.id, 'visibility', 'visible');
+                }
                 mapLayerContainer.style.display = "none";
                 layerButton.style.display = "block";
                 const elms = mapLayerContainer.getElementsByClassName("active");
@@ -37,7 +60,7 @@ class MapboxLayerSwitcherControl {
                 }
                 srcElement.classList.add("active");
             });
-            if (layer.id === MapboxLayerSwitcherControl.DEFAULT_LAYER) {
+            if (layer.visibility === 'visible') {
                 layerElement.classList.add("active");
             }
             mapLayerContainer.appendChild(layerElement);
@@ -62,7 +85,6 @@ class MapboxLayerSwitcherControl {
         return;
     }
 }
-MapboxLayerSwitcherControl.DEFAULT_LAYER = "";
 MapboxLayerSwitcherControl.DEFAULT_LAYERS = [];
 exports.MapboxLayerSwitcherControl = MapboxLayerSwitcherControl;
 //# sourceMappingURL=index.js.map

@@ -10,7 +10,6 @@ export type MapboxLayerDefinition =
 
 export class MapboxLayerSwitcherControl implements IControl
 {
-    private static readonly DEFAULT_LAYER = "";
     private static readonly DEFAULT_LAYERS = [];
 
     private controlContainer: HTMLElement | undefined;
@@ -45,13 +44,34 @@ export class MapboxLayerSwitcherControl implements IControl
             layerElement.addEventListener("click", event =>
             {
                 const srcElement = event.srcElement as HTMLButtonElement;
+                const { layers } = map.getStyle();
                 // map.setStyle(JSON.parse(srcElement.dataset.id!));
                 if(layerElement.dataset.type === 'base') {
                     this.layers.forEach(item => {
-                        map.setLayoutProperty(item.id, 'visibility', 'none');        
+                        if(item.id == 'composite') {
+                            if(layers !== undefined) {
+                                layers.forEach(element => {
+                                    if(element.source =='composite') {
+                                        map.setLayoutProperty(element.id,'visibility','none');
+                                    }
+                                });
+                            }
+                        } else {
+                            map.setLayoutProperty(item.id, 'visibility', 'none');
+                        }      
                     });
                 }
-                map.setLayoutProperty(srcElement.dataset.id!, 'visibility', 'visible');
+                if(srcElement.dataset.id == 'composite') {
+                    if(layers !== undefined) {
+                        layers.forEach(element => {
+                            if(element.source =='composite') {
+                                map.setLayoutProperty(element.id,'visibility','visible');
+                            }
+                        });
+                    }
+                } else {
+                    map.setLayoutProperty(srcElement.dataset.id!, 'visibility', 'visible');
+                }
                 mapLayerContainer.style.display = "none";
                 layerButton.style.display = "block";
                 const elms = mapLayerContainer.getElementsByClassName("active");

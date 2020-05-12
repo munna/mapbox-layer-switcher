@@ -1,6 +1,6 @@
 {
   "name": "mapbox-layer-switcher",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "description": "Mapbox GL Layer Switcher",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

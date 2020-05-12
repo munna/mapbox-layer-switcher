@@ -3,9 +3,9 @@ export declare type MapboxLayerDefinition = {
     title: string;
     id: string;
     type: string;
+    visibility: string;
 };
 export declare class MapboxLayerSwitcherControl implements IControl {
-    private static readonly DEFAULT_LAYER;
     private static readonly DEFAULT_LAYERS;
     private controlContainer;
     private layers;
