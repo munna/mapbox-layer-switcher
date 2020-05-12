@@ -1,28 +1,24 @@
 import { IControl, Map as MapboxMap } from "mapbox-gl";
 
-export type MapboxStyleDefinition =
+export type MapboxLayerDefinition =
 {
     title: string;
-    uri: string;
+    id: string;
+    type: string;
+    visibility: string;
 }
 
-export class MapboxStyleSwitcherControl implements IControl
+export class MapboxLayerSwitcherControl implements IControl
 {
-    private static readonly DEFAULT_STYLE = "Streets";
-    private static readonly DEFAULT_STYLES = [
-        { title: "Dark", uri:"mapbox://styles/mapbox/dark-v9"},
-        { title: "Light", uri:"mapbox://styles/mapbox/light-v9"},
-        { title: "Outdoors", uri:"mapbox://styles/mapbox/outdoors-v10"},
-        { title: "Satellite", uri:"mapbox://styles/mapbox/satellite-streets-v10"},
-        { title: "Streets", uri:"mapbox://styles/mapbox/streets-v10"}
-    ];
+    private static readonly DEFAULT_LAYER = "";
+    private static readonly DEFAULT_LAYERS = [];
 
     private controlContainer: HTMLElement | undefined;
-    private styles: MapboxStyleDefinition[];
+    private layers: MapboxLayerDefinition[];
 
-    constructor(styles?: MapboxStyleDefinition[])
+    constructor(layers?: MapboxLayerDefinition[])
     {
-        this.styles = styles || MapboxStyleSwitcherControl.DEFAULT_STYLES;
+        this.layers = layers || MapboxLayerSwitcherControl.DEFAULT_LAYERS;
     }
 
     public getDefaultPosition(): string
@@ -36,53 +32,60 @@ export class MapboxStyleSwitcherControl implements IControl
         this.controlContainer = document.createElement("div");
         this.controlContainer.classList.add("mapboxgl-ctrl");
         this.controlContainer.classList.add("mapboxgl-ctrl-group");
-        const mapStyleContainer = document.createElement("div");
-        const styleButton = document.createElement("button");
-        mapStyleContainer.classList.add("mapboxgl-style-list");
-        for (const style of this.styles)
+        const mapLayerContainer = document.createElement("div");
+        const layerButton = document.createElement("button");
+        mapLayerContainer.classList.add("mapboxgl-layer-list");
+        for (const layer of this.layers)
         {
-            const styleElement = document.createElement("button");
-            styleElement.innerText = style.title;
-            styleElement.classList.add(style.title.replace(/[^a-z0-9-]/gi, '_'));
-            styleElement.dataset.uri = JSON.stringify(style.uri);
-            styleElement.addEventListener("click", event =>
+            const layerElement = document.createElement("button");
+            layerElement.innerText = layer.title;
+            layerElement.classList.add(layer.title.replace(/[^a-z0-9-]/gi, '_'));
+            layerElement.dataset.id = layer.id // JSON.stringify(layer.id);
+            layerElement.dataset.type = layer.type;
+            layerElement.addEventListener("click", event =>
             {
                 const srcElement = event.srcElement as HTMLButtonElement;
-                map.setStyle(JSON.parse(srcElement.dataset.uri!));
-                mapStyleContainer.style.display = "none";
-                styleButton.style.display = "block";
-                const elms = mapStyleContainer.getElementsByClassName("active");
+                // map.setStyle(JSON.parse(srcElement.dataset.id!));
+                if(layerElement.dataset.type === 'base') {
+                    this.layers.forEach(item => {
+                        map.setLayoutProperty(item.id, 'visibility', 'none');        
+                    });
+                }
+                map.setLayoutProperty(srcElement.dataset.id!, 'visibility', 'visible');
+                mapLayerContainer.style.display = "none";
+                layerButton.style.display = "block";
+                const elms = mapLayerContainer.getElementsByClassName("active");
                 while (elms[0])
                 {
                     elms[0].classList.remove("active");
                 }
                 srcElement.classList.add("active");
             });
-            if (style.title === MapboxStyleSwitcherControl.DEFAULT_STYLE)
+            if (layer.visibility === 'visible')
             {
-                styleElement.classList.add("active");
+                layerElement.classList.add("active");
             }
-            mapStyleContainer.appendChild(styleElement);
+            mapLayerContainer.appendChild(layerElement);
         }
-        styleButton.classList.add("mapboxgl-ctrl-icon");
-        styleButton.classList.add("mapboxgl-style-switcher");
-        styleButton.addEventListener("click", () =>
-        {
-            styleButton.style.display = "none";
-            mapStyleContainer.style.display = "block";
+        layerButton.classList.add("mapboxgl-ctrl-icon");
+        layerButton.classList.add("mapboxgl-layer-switcher");
+        layerButton.addEventListener("click", () =>
+        { 
+            layerButton.style.display = "none";
+            mapLayerContainer.style.display = "block";
         });
 
         document.addEventListener("click", event =>
         {
             if (!this.controlContainer!.contains(event.target as Element))
             {
-                mapStyleContainer.style.display = "none";
-                styleButton.style.display = "block";
+                mapLayerContainer.style.display = "none";
+                layerButton.style.display = "block";
             }
         });
 
-        this.controlContainer.appendChild(styleButton);
-        this.controlContainer.appendChild(mapStyleContainer);
+        this.controlContainer.appendChild(layerButton);
+        this.controlContainer.appendChild(mapLayerContainer);
         return this.controlContainer;
     }
 

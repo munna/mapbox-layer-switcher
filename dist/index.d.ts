@@ -1,14 +1,15 @@
 import { IControl, Map as MapboxMap } from "mapbox-gl";
-export declare type MapboxStyleDefinition = {
+export declare type MapboxLayerDefinition = {
     title: string;
-    uri: string;
+    id: string;
+    type: string;
 };
-export declare class MapboxStyleSwitcherControl implements IControl {
-    private static readonly DEFAULT_STYLE;
-    private static readonly DEFAULT_STYLES;
+export declare class MapboxLayerSwitcherControl implements IControl {
+    private static readonly DEFAULT_LAYER;
+    private static readonly DEFAULT_LAYERS;
     private controlContainer;
-    private styles;
-    constructor(styles?: MapboxStyleDefinition[]);
+    private layers;
+    constructor(layers?: MapboxLayerDefinition[]);
     getDefaultPosition(): string;
     onAdd(map: MapboxMap): HTMLElement;
     onRemove(): void;

@@ -1,7 +1,7 @@
 {
-  "name": "mapbox-gl-style-switcher",
-  "version": "1.0.4",
-  "description": "Mapbox GL JS Style Switcher",
+  "name": "mapbox-layer-switcher",
+  "version": "0.0.2",
+  "description": "Mapbox GL Layer Switcher",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -10,19 +10,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/el/style-switcher.git"
+    "url": "git+https://github.com/munna/mapbox-layer-switcher.git"
   },
   "keywords": [
     "mapbox",
     "mapbox-gl-js",
     "style-switcher"
   ],
-  "author": "Eliz Kilic",
+  "author": "Munna Bhakta",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/el/style-switcher/issues"
+    "url": "https://github.com/munna/mapbox-layer-switcher/issues"
   },
-  "homepage": "https://github.com/el/style-switcher#readme",
+  "homepage": "https://github.com/munna/mapbox-layer-switcher#readme",
   "dependencies": {
     "mapbox-gl": "^1.9.0"
   },
