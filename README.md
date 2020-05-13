@@ -1,43 +1,53 @@
-# Mapbox GL JS Style Switcher
+# Mapbox GL JS Layer Switcher
 
-Adds a style switcher to `mapbox-gl`
+Adds a Layer switcher to `mapbox-gl`
 
 ## Installation:
 
 ```bash
-npm i mapbox-gl-style-switcher --save
+npm i mapbox-layer-switcher --save
 ```
 
 ## Usage:
 
 ```ts
-import { MapboxStyleSwitcherControl } from "mapbox-gl-style-switcher";
+import { MapboxLayerSwitcherControl } from "mapbox-layer-switcher";
 import { Map as MapboxMap } from "mapbox-gl";
 
-import "mapbox-gl-style-switcher/styles.css";
+import "mapbox-layer-switcher/styles.css";
 
 const map = new MapboxMap();
-map.addControl(new MapboxStyleSwitcherControl());
+map.addControl(new MapboxLayerSwitcherControl());
 ```
 
 ## Options:
-If you want to supply your own list of styles, pass them in the constructor.
+If you want to supply your own list of layers, pass them in the constructor.
 
 ```ts
-import { MapboxStyleDefinition, MapboxStyleSwitcherControl } from "mapbox-gl-style-switcher";
+import { MapboxLayerDefinition, MapboxLayerSwitcherControl } from "mapbox-layer-switcher";
 
-const styles: MapboxStyleDefinition[] = [
+const layers: MapboxLayerDefinition[] = [
     {
-        title: "Dark",
-        uri:"mapbox://styles/mapbox/dark-v9"
+        id: "here-map",
+        title: "Here",
+        visibility: 'visible',
+        type: 'base'
     },
     {
-        title: "Light",
-        uri:"mapbox://styles/mapbox/light-v9"
+        id: "google-map",
+        title: "Google",
+        visibility: 'none',
+        type: 'base'
+    },
+    {
+        id: "composite",
+        title: "MapBox",
+        visibility: 'none',
+        type: 'base'
     }
 ];
 
-map.addControl(new MapboxStyleSwitcherControl(styles));
+map.addControl(new MapboxLayerSwitcherControl(layers));
 ```
 
 ## Screenshots

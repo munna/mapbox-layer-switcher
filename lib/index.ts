@@ -34,6 +34,16 @@ export class MapboxLayerSwitcherControl implements IControl
         const mapLayerContainer = document.createElement("div");
         const layerButton = document.createElement("button");
         mapLayerContainer.classList.add("mapboxgl-layer-list");
+        if(this.layers.length == 0) {
+            map.getStyle().layers?.forEach(layer=>{
+                this.layers.push({
+                        id: layer.id,
+                        title: layer.id,
+                        type: 'overlay',
+                        visibility: layer.layout?.visibility === undefined ? '' : layer.layout.visibility 
+                    })
+            })
+        }
         for (const layer of this.layers)
         {
             const layerElement = document.createElement("button");
